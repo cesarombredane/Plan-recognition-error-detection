@@ -9,8 +9,8 @@ using namespace std;
 class rule {
     public:
         rule();
-        rule(int _primitive, int _id);
-        rule(int _id, string s);
+        rule(int, int);
+        rule(int, string);
 
         virtual ~rule();
 
@@ -18,16 +18,16 @@ class rule {
         const vector<int>& getChildren() const;
         const vector<pair<int,int>>& getConstraints() const;
 
-        void addChild(int child);
-        void addConstraint(pair<int,int> constraint);
-        void addChildren(vector<int> _children);
-        void addConstraints(vector<pair<int,int>> _constraints);
+        void addChild(int);
+        void addConstraint(pair<int,int>);
+        void addChildren(vector<int>);
+        void addConstraints(vector<pair<int,int>>);
 
         string toString();
-        string toString(map<int,string> revIds);
+        string toString(map<int,string>);
 
-        bool operator<(const rule& _r) const;
-        bool operator==(const rule& _r) const;
+        bool operator<(const rule&) const;
+        bool operator==(const rule&) const;
         explicit operator int() const;
         friend ostream& operator << (ostream&, const rule&);
 
