@@ -20,6 +20,8 @@ class rule {
 
         void addChild(int child);
         void addConstraint(pair<int,int> constraint);
+        void addChildren(vector<int> _children);
+        void addConstraints(vector<pair<int,int>> _constraints);
 
         string toString();
         string toString(map<int,string> revIds);

@@ -9,12 +9,12 @@ rule::rule(int _id, string s):id(_id) {
     size_t pos;
 
     if((pos = s.find(':')) != string::npos)
-        primitive = stoi(s.substr(0,pos));
+        primitive = stoi(s.substr(0, pos));
 
     s.erase(0, pos + 1);
     pos = s.find('|');
     string s_children = s.substr(0, pos);
-    string s_constraints = s.substr(pos+1, s.find(';'));
+    string s_constraints = s.substr(pos + 1, s.find(';'));
 
     while ((pos = s_children.find(',')) != string::npos) {
         children.push_back(stoi(s.substr(0, pos)));
@@ -22,18 +22,16 @@ rule::rule(int _id, string s):id(_id) {
     }
 
     while ((pos = s_constraints.find("),")) != string::npos) {
-        int _first;
-        int _second;
+        int _first, _second;
         string temp;
         size_t vir;
 
-        temp = s_constraints.substr(1,pos);
+        temp = s_constraints.substr(1, pos);
         vir = temp.find(',');
+        _first = stoi(temp.substr(0, vir));
+        _second = stoi(temp.erase(0,vir + 1));
 
-        _first = stoi(temp.substr(0,vir));
-        _second = stoi(temp.erase(0,vir+1));
-
-        constraints.emplace_back(_first,_second);
+        constraints.emplace_back(_first, _second);
         s_children.erase(0, pos + 2);
     }
 }
@@ -43,110 +41,106 @@ rule::~rule() = default;
 
 // functions
 int rule::getPrimitive() const {
-    return primitive;
+    return this->primitive;
 }
 const vector<int>& rule::getChildren() const {
-    return children;
+    return this->children;
 }
 const vector<pair<int,int>>& rule::getConstraints() const {
-    return constraints;
+    return this->constraints;
 }
 void rule::addChild(int child) {
-    children.push_back(child);
+    this->children.push_back(child);
+}
+void rule::addChildren(vector<int> _children) {
+    this->children.insert(this->children.end(), _children.begin(), _children.end());
 }
 void rule::addConstraint(pair<int, int> constraint) {
-    constraints.push_back(constraint);
+    this->constraints.push_back(constraint);
+}
+void rule::addConstraints(vector<pair<int,int>> _constraints) {
+    this->constraints.insert(this->constraints.end(), _constraints.begin(), _constraints.end());
 }
 
 // toStrings
 string rule::toString() {
     string result;
-    result+=to_string(this->primitive);
-    result+="(";
+    result += to_string(this->primitive);
+    result += '(';
 
-    for(int i = 0; i<this->children.size();i++) {
+    for(int i = 0; i < this->children.size(); ++i) {
         result += to_string(this->children[i]);
 
-        if(i != this->children.size()-1)
-            result += ",";
+        if(i != this->children.size() - 1)
+            result += ',';
     }
+    result += "),(";
 
-    result+="),(";
+    for(int i = 0; i < this->constraints.size(); ++i) {
+        result += '(';
+        result += to_string(this->constraints[i].first);
+        result += ',';
+        result += to_string(this->constraints[i].second);
+        result += ')';
 
-    for(int j = 0; j<this->constraints.size();j++) {
-        result+= "(";
-        result+= to_string(this->constraints[j].first);
-        result+= ",";
-        result+= to_string(this->constraints[j].second);
-        result+= ")";
-
-        if(j != this->constraints.size()-1)
-            result += ",";
+        if(i != this->constraints.size() - 1)
+            result += ',';
     }
-
-    result+=")";
+    result += ')';
 
     return result;
 }
 string rule::toString(map<int,string> revIds) {
     string result;
-    result+=revIds[this->primitive];
-    result+="(";
+    result += revIds[this->primitive];
+    result += '(';
 
-    for(int i = 0; i<this->children.size();i++) {
+    for(int i = 0; i < this->children.size(); ++i) {
         result += revIds[this->children[i]];
 
-        if(i != this->children.size()-1)
-            result += ",";
+        if(i != this->children.size() - 1)
+            result += ',';
     }
-
     result+="),(";
 
-    for(int j = 0; j<this->constraints.size();j++) {
-        result+= "(";
-        result+= to_string(this->constraints[j].first);
-        result+= ",";
-        result+= to_string(this->constraints[j].second);
-        result+= ")";
+    for(int i = 0; i < this->constraints.size(); ++i) {
+        result += '(';
+        result += to_string(this->constraints[i].first);
+        result += ',';
+        result += to_string(this->constraints[i].second);
+        result += ')';
 
-        if(j != this->constraints.size()-1)
-            result += ",";
+        if(i != this->constraints.size() - 1)
+            result += ',';
     }
-
-    result+=")";
+    result += ')';
 
     return result;
 }
 
 // operators
 rule::operator int() const {
-    return id;
+    return this->id;
 }
 bool rule::operator<(const rule& _r) const {
-    return id<(int)_r;
+    return this->id<(int)_r;
 }
 bool rule::operator==(const rule& _r) const {
-    return id==(int)_r;
+    return this->id==(int)_r;
 }
 ostream& operator<<(ostream& os, const rule& r) {
-    os << r.primitive << ":";
-
-    for(int i = 0; i<r.children.size();i++) {
+    os << r.primitive << ':';
+    for(int i = 0; i < r.children.size(); ++i) {
         os << r.children[i];
-
-        if(i != r.children.size()-1)
-            os << ",";
+        if(i != r.children.size() - 1)
+            os << ',';
     }
-
-    os << "|";
-
-    for(int j = 0; j<r.constraints.size();j++) {
-        os << "(" << r.constraints[j].first << ","<< r.constraints[j].second << ")";
-
-        if(j != r.constraints.size()-1)
-            os << ",";
+    os << '|';
+    for(int i = 0; i < r.constraints.size(); ++i) {
+        os << '(' << r.constraints[i].first << ',' << r.constraints[i].second << ')';
+        if(i != r.constraints.size() - 1)
+            os << ',';
     }
-
-    os << ";";
+    os << ';';
     return os;
 }
