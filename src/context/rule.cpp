@@ -1,6 +1,4 @@
-#include <vector>
 #include "src/headers/rule.h"
-#include <string>
 
 // constructor
 rule::rule():id(-1),primitive(-1) {}
@@ -8,8 +6,7 @@ rule::rule(int _primitive, int _id):id(_id), primitive(_primitive) {}
 rule::rule(int _id, string s):id(_id) {
     size_t pos;
 
-    if((pos = s.find(':')) != string::npos)
-        primitive = stoi(s.substr(0, pos));
+    if((pos = s.find(':')) != string::npos) primitive = stoi(s.substr(0, pos));
 
     s.erase(0, pos + 1);
     pos = s.find('|');
@@ -70,9 +67,7 @@ string rule::toString() {
 
     for(int i = 0; i < this->children.size(); ++i) {
         result += to_string(this->children[i]);
-
-        if(i != this->children.size() - 1)
-            result += ',';
+        if(i != this->children.size() - 1) result += ',';
     }
     result += "),(";
 
@@ -82,9 +77,7 @@ string rule::toString() {
         result += ',';
         result += to_string(this->constraints[i].second);
         result += ')';
-
-        if(i != this->constraints.size() - 1)
-            result += ',';
+        if(i != this->constraints.size() - 1) result += ',';
     }
     result += ')';
 
@@ -97,9 +90,7 @@ string rule::toString(map<int,string> revIds) {
 
     for(int i = 0; i < this->children.size(); ++i) {
         result += revIds[this->children[i]];
-
-        if(i != this->children.size() - 1)
-            result += ',';
+        if(i != this->children.size() - 1) result += ',';
     }
     result+="),(";
 
@@ -109,9 +100,7 @@ string rule::toString(map<int,string> revIds) {
         result += ',';
         result += to_string(this->constraints[i].second);
         result += ')';
-
-        if(i != this->constraints.size() - 1)
-            result += ',';
+        if(i != this->constraints.size() - 1) result += ',';
     }
     result += ')';
 
@@ -132,14 +121,12 @@ ostream& operator<<(ostream& os, const rule& r) {
     os << r.primitive << ':';
     for(int i = 0; i < r.children.size(); ++i) {
         os << r.children[i];
-        if(i != r.children.size() - 1)
-            os << ',';
+        if(i != r.children.size() - 1) os << ',';
     }
     os << '|';
     for(int i = 0; i < r.constraints.size(); ++i) {
         os << '(' << r.constraints[i].first << ',' << r.constraints[i].second << ')';
-        if(i != r.constraints.size() - 1)
-            os << ',';
+        if(i != r.constraints.size() - 1) os << ',';
     }
     os << ';';
     return os;
