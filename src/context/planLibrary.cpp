@@ -3,40 +3,32 @@
 
 using namespace bnf;
 
-// ctor & dtor
+// constructor
 planLibrary::planLibrary() = default;
+
+// destructor
 planLibrary::~planLibrary() = default;
 
-
 // functions
-
 const unordered_set<int>& planLibrary::getTerminals() const {
     return terminals;
 }
-
 const unordered_set<int>& planLibrary::getNonTerminals() const {
     return nonTerminals;
 }
-
 const unordered_set<int>& planLibrary::getGoals() const {
     return goals;
 }
-
 const unordered_map<int,rule>& planLibrary::getRules() const {
     return rules;
 }
-
-
 bool planLibrary::isTerminal(int symbol) const {
     return terminals.count(symbol) > 0;
 }
-
 bool planLibrary::isGoal(int symbol) const {
     return goals.count(symbol) > 0;
 }
-
-
-void planLibrary::addRule(rule r) {
+void planLibrary::addRule(const rule& r) {
     rules[(int)r] = r;
 
     if(nonTerminals.count(r.getPrimitive()) == 0)
@@ -48,7 +40,6 @@ void planLibrary::addRule(rule r) {
                 nonTerminals.insert(it);
     }
 }
-
 void planLibrary::addSymbol(int s, bool t, bool g) {
     if(t)
         terminals.insert(s);
@@ -61,13 +52,11 @@ void planLibrary::addSymbol(int s, bool t, bool g) {
 
 
 // toString
-
 string planLibrary::toString() {
     string result;
 
     result += "Goals(";
     int cnt = 0;
-
     for (auto itG : this->goals) {
         cnt++;
         result += to_string(itG);
