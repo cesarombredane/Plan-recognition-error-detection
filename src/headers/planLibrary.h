@@ -3,8 +3,10 @@
 #include "unordered_map"
 #include "unordered_set"
 #include "rule.h"
+#include "bnflite.h"
 
 using namespace std;
+using namespace bnf;
 
 #ifndef PLANLABRARY_H
 #define PLANLABRARY_H

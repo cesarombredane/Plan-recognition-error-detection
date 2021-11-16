@@ -1,7 +1,4 @@
 #include "src/headers/planLibrary.h"
-#include "src/headers/bnflite.h"
-
-using namespace bnf;
 
 // constructor
 planLibrary::planLibrary() = default;

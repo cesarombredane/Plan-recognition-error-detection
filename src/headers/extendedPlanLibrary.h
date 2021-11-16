@@ -1,84 +1,31 @@
-/*!
- *  \file ExtendedPlanLibrary.h
- *  \brief a plan library with additional information
- *
- *  \version 1.0
- *  \author Jean Massardi
- */
-
+#include "tuple"
+#include "string"
+#include "random"
 #include "planLibrary.h"
 #include "probabilityDistribution.h"
-#include <utility>
-#include <map>
+#include "bnflite.h"
+
+using namespace bnf;
 
 #ifndef EXTENDEDPLANLIBRARY_H
 #define EXTENDEDPLANLIBRARY_H
 
-/*!
- *  \class extendedPlanLibrary
- *  \brief a plan library with additional information
- *  additional information :
- *  - representation of noise
- *  - representation of rule's probability to form a nonTerminal
- *  - map to convert action number to action name and vice versa
- */
 class extendedPlanLibrary {
     public:
-        /*!
-         *  \brief Constructor
-         *  extendedPlanLibrary constructor
-         *
-         *  \param spl : string representation of an extended plan library 
-         */
-        extendedPlanLibrary(const char * spl);
+        explicit extendedPlanLibrary(const char*);
+        explicit extendedPlanLibrary(planLibrary*);
+        extendedPlanLibrary(const extendedPlanLibrary&);
+        explicit extendedPlanLibrary(float = 0.0, int = 5,int = 10, int = 2, int = 3, int = 2);
 
-        /*!
-         *  \brief Constructor
-         *  extendedPlanLibrary constructor
-         *
-         *  \param _ePlanLibrary : pointer to a plan library
-         */
-        extendedPlanLibrary(planLibrary* _ePlanLibrary);
+        ~extendedPlanLibrary();
 
-        /*!
-         *  \brief Constructor
-         *  extendedPlanLibrary constructor
-         *
-         *  \param epl : memory address of an extended plan library
-         */
-        extendedPlanLibrary(const extendedPlanLibrary& epl);
+        string toString();
 
-        /*!
-         *  \brief Constructor
-         *  extendedPlanLibrary constructor
-         *
-         *  \param noisePRCT : noise orediction
-         *  \param goal : number of goals
-         *  \param _size : number of actions
-         *  \param depth : depth of plan tree
-         *  \param widthAND : number of action to form a rule
-         *  \param widthOR : number of different rules to form a nonTerminal action
-         */
-        extendedPlanLibrary(float noisePRCT = 0.0, int goal = 5,int _size = 10, int depth = 2, int widthAND = 3, int widthOR = 2);
-
-        /*!
-         *  \brief Destructor
-         *  extendedPlanLibrary destructor
-         */
-        virtual ~extendedPlanLibrary();
-
-        /*!
-         *  \brief String representation of the PlanLibrary
-         */
-        const string toString();
-
-        planLibrary* ePlanLibrary;/*!< plan library */
-
-        probabilityDistribution decisionModel;/*!< probability distribution used to know the probability to use a rule to form a non Terminal action */
-        probabilityDistribution noise;/*!< probability distribution used to represent the noise */
-
-        map<string,int> ids;/*!< map to convert actions names to actions numbers */
-        map<int, string> revIds;/*!< map to convert actions numbers to actions names */
+        planLibrary* ePlanLibrary;
+        probabilityDistribution decisionModel;
+        probabilityDistribution noise;
+        map<string,int> ids;
+        map<int, string> revIds;
 };
 
 #endif // EXTENDEDPLANLIBRARY_H
