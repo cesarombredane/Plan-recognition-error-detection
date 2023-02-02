@@ -1,14 +1,14 @@
-#include "src/headers/solver.h"
+#include "solver.h"
 
 // --------- ----------- --------- [treeNode] --------- ---------- ----------
 
 // ctor
 
-treeNode::treeNode() {}
+treeNode::treeNode() = default;
 
 treeNode::treeNode(extendedPlanLibrary* _epl, int _symbol):epl(_epl), symbol(_symbol) {
     if(!epl->ePlanLibrary->isTerminal(symbol)) {
-        _rule = epl->decisionModel.RNC(symbol);
+        _rule = epl->ruleDecisionModel.RNC(symbol);
         status = false;
     }
     else {
@@ -20,52 +20,39 @@ treeNode::treeNode(extendedPlanLibrary* _epl, int _symbol):epl(_epl), symbol(_sy
 // function
 
 int treeNode::update() { // update with the ExpectedNextObservation as Observation
-    if(status)
-        return -1;
+    if(status) return -1;
 
     rule r = epl->ePlanLibrary->getRules().at(_rule);
     vector<int> list_candidate;
 
-    for(size_t i =0;i < r.getChildren().size();i++) {
+    for(int i = 0; i < r.getChildren().size(); i++) {
             bool ok = true;
 
             for(auto& itC : r.getConstraints()) {
                 if(itC.second == i) {
-                    if(children.count(itC.first) == 0) {
-                        ok = false;
-                        break;
-                    }
-                    else if(!children[itC.first].status) {
+                    if(children.count(itC.first) == 0 || !children[itC.first].status) {
                         ok = false;
                         break;
                     }
                 }
             }
 
-            if(children.count(i) > 0)
-                if(children[i].status)
-                    ok = false;
-
-            if(ok)
-                list_candidate.push_back(i);
+            if(children.count(i) > 0 && children[i].status) ok = false;
+            if(ok) list_candidate.push_back(i);
     }
 
     int childId = list_candidate[rand() % list_candidate.size()];
     treeNode* child;
 
-    if(children.count(childId) >0)
-        child = &children[childId];
+    if(children.count(childId) >0) child = &children[childId];
     else {
         children[childId] = treeNode(epl,r.getChildren()[childId]);
         child = &children[childId];
     }
 
-    int resu;
-
-    if(child->status)
-        resu = child->symbol;
-    else
-        resu = child->update();
+    int result;
+    if(child->status) result = child->symbol;
+    else result = child->update();
 
     status = children.size() == r.getChildren().size();
 
@@ -78,14 +65,14 @@ int treeNode::update() { // update with the ExpectedNextObservation as Observati
         }
     }
 
-    return resu;
+    return result;
 }
 
 // --------- ----------- ----------- [tree] ----------- ---------- ----------
 
 // ctor
 
-tree::tree() {}
+tree::tree() = default;
 
 tree::tree(extendedPlanLibrary* _epl, int goal):epl(_epl) {
     root = treeNode(epl,goal);
@@ -94,40 +81,34 @@ tree::tree(extendedPlanLibrary* _epl, int goal):epl(_epl) {
 // functions
 
 vector<int> tree::update() {
-    if(root.status)
-        return vector<int>();
-
+    if(root.status) return {};
     int FO = updateFO();
     currentTerminalFO = FO;
 
-    if(FO == -1)
-        return vector<int>();
+    if(FO == -1) return {};
 
-    int PO = epl->noise.RNC(FO);
+    int PO = epl->noisePrediction.RNC(FO);
 
-    if (PO == -1)
-        return update();
+    if (PO == -1) return update();
 
-    vector<int> resu;
+    vector<int> result;
 
     if (PO < -1) {
-        while(resu.size() + PO < -1) {
+        while(result.size() + PO < -1) {
             auto it = epl->ePlanLibrary->getTerminals().begin();
 
             int rnd  = rand() % epl->ePlanLibrary->getTerminals().size();
-            for(int i =0; i<rnd;i++)
-                it++;
+            for(int i =0; i<rnd;i++) it++;
 
             int temp = *(it);
 
-            if(temp >= 0)
-                resu.push_back(temp);
+            if(temp >= 0) result.push_back(temp);
         }
     }
 
-    resu.push_back(FO);
+    result.push_back(FO);
 
-    return resu;
+    return result;
 }
 
 int tree::updateFO()
@@ -140,7 +121,7 @@ int tree::updateFO()
 // ctor
 
 solverParticle::solverParticle(extendedPlanLibrary* _epl):epl(_epl) {
-    int ruleGoal = epl->decisionModel.RNC(-1);
+    int ruleGoal = epl->ruleDecisionModel.RNC(-1);
     goal = epl->ePlanLibrary->getRules().at(ruleGoal).getChildren().at(0);
     planTree = tree(epl,goal);
     expNextObs = planTree.update();
@@ -151,8 +132,7 @@ solverParticle::solverParticle(extendedPlanLibrary* _epl):epl(_epl) {
 bool solverParticle::update() {
     expNextObs.erase(expNextObs.begin());
 
-    if(expNextObs.empty())
-        expNextObs = planTree.update();
+    if(expNextObs.empty()) expNextObs = planTree.update();
 
     return(!expNextObs.empty());
 }
@@ -166,93 +146,52 @@ solver::solver(extendedPlanLibrary* _epl, int _nbParticle):epl(_epl), nbParticle
 
     while(currentNbParticle < nbParticles) {
         solverParticle newParticle = solverParticle(epl);
-
-        if(newParticle.planTree.root.status)
-            continue;
-
-        if(particles.count(newParticle.expNextObs[0]) > 0)
-            particles[newParticle.expNextObs[0]].push_back(newParticle);
+        if(newParticle.planTree.root.status) continue;
+        if(particles.count(newParticle.expNextObs[0]) > 0) particles[newParticle.expNextObs[0]].push_back(newParticle);
         else {
             particles[newParticle.expNextObs[0]] = vector<solverParticle>();
             particles[newParticle.expNextObs[0]].push_back(newParticle);
         }
-
         currentNbParticle++;
     }
 }
 
-solver::solver() {}
+solver::solver() = default;
 
-solver::~solver() {}
+solver::~solver() = default;
 
 
 // functions
 
 map<int,int> solver::getGoals() {
-    map<int,int> resu;
+    map<int,int> result;
 
-    for(auto itObs : particles) {
-        for(auto itPar : itObs.second) {
-            if(resu.count(itPar.goal) > 0)
-                resu[itPar.goal]++;
-            else
-                resu[itPar.goal] = 1;
+    for(const auto& itObs : particles) {
+        for(const auto& itPar : itObs.second) {
+            if(result.count(itPar.goal) > 0) result[itPar.goal]++;
+            else result[itPar.goal] = 1;
         }
     }
 
-    return resu;
-}
-
-map<int, int> solver::getParticles() {
-    map<int, int> resu;
-
-    for (auto itObs : particles)
-        resu[itObs.first] = itObs.second.size();
-
-    return resu;
-}
-
-map<string,float> solver::getProbGoals() {
-    map<string,float> resu;
-
-    for(auto itObs : particles) {
-        for(auto itPar : itObs.second) {
-            if(resu.count(epl->revIds[itPar.goal]) > 0)
-                resu[epl->revIds[itPar.goal]]+=1.0/(float)nbParticles;
-            else
-                resu[epl->revIds[itPar.goal]] = 1.0/(float)nbParticles;
-        }
-    }
-
-    return resu;
-}
-
-map<string,float> solver::getProbParticles() {
-    map<string,float> resu;
-
-    for(auto it: particles)
-        resu[epl->revIds[it.first]] = (float)it.second.size()/(float)nbParticles;
-
-    return resu;
+    return result;
 }
 
 int solver::getMaxGoal() { // return the goal with the highest probability to append
     map<int,int> goals = getGoals();
 
-    if(goals.empty())
-        return -1;
+    if(goals.empty()) return -1;
 
-    int resu = -1;
+    int result = -1;
     int value = 0;
 
     for(auto& it: goals) {
         if(value < it.second) {
             value = it.second;
-            resu = it.first;
+            result = it.first;
         }
     }
 
-    return resu;
+    return result;
 }
 
 int solver::getLastObservation() {
@@ -268,7 +207,7 @@ bool solver::addObservation(int obs) {
     previousObservations.push_back(obs);
     vector<solverParticle> validParticles = particles[obs];
 
-    if(validParticles.size() == 0) {
+    if(validParticles.empty()) {
         particles.clear();
         return false;
     }
@@ -285,99 +224,57 @@ bool solver::addObservation(int obs) {
            validParticles.push_back(newParticle);
         }
 
-        if (cnt > nbParticles)
-           break;
+        if (cnt > nbParticles) break;
     }
 
     particles.clear();
 
     for(auto it : validParticles) {
-        if(particles.count(it.expNextObs[0]) >0)
-            particles[it.expNextObs[0]].push_back(it);
+        if(particles.count(it.expNextObs[0]) >0) particles[it.expNextObs[0]].push_back(it);
         else {
             particles[it.expNextObs[0]] = vector<solverParticle>();
             particles[it.expNextObs[0]].push_back(it);
         }
     }
 
-    if(particles.empty())
-        return false;
+    if(particles.empty()) return false;
 
     return status();
 }
 
-bool solver::addObservation(string obs) {
-    return addObservation(this->epl->ids[obs]);
-}
-
 
 pair<int,vector<int>> solver::generatePlan() {
-    tree t = tree(epl,epl->ePlanLibrary->getRules().at(epl->decisionModel.RNC(-1)).getChildren().at(0));
-    vector<int> resu;
+    tree t = tree(epl,epl->ePlanLibrary->getRules().at(epl->ruleDecisionModel.RNC(-1)).getChildren().at(0));
+    vector<int> result;
     int nextAction = t.updateFO();
 
     while(nextAction != -1) {
-        int PO = epl->noise.RNC(nextAction);
+        int PO = epl->noisePrediction.RNC(nextAction);
 
-        if(PO > -1)
-            resu.push_back(PO);
+        if(PO > -1) result.push_back(PO);
 
         if (PO < -1) {
-            int init = resu.size();
+            size_t init = result.size();
 
-            while(resu.size() - init + PO -1 < -1) {
+            while(result.size() - init + PO - 1 < -1) {
                 auto it = epl->ePlanLibrary->getTerminals().begin();
                 int rnd  = rand() % epl->ePlanLibrary->getTerminals().size();
 
-                for(int i =0; i<rnd;i++)
-                    it++;
+                for(int i =0; i<rnd;i++) it++;
 
                 int temp = *(it);
 
-                if(temp >= 0)
-                    resu.push_back(temp);
+                if(temp >= 0) result.push_back(temp);
             }
         }
 
         nextAction = t.updateFO();
     }
 
-    return make_pair(t.root.symbol,resu);
-}
-
-pair<int,vector<int>> solver::generatePlanFO() {
-    tree t = tree(epl,epl->ePlanLibrary->getRules().at(epl->decisionModel.RNC(-1)).getChildren().at(0));
-    vector<int> resu;
-    int nextAction = t.updateFO();
-
-    while(nextAction != -1) {
-        resu.push_back(nextAction);
-        nextAction = t.updateFO();
-    }
-
-    return make_pair(t.root.symbol,resu);
+    return make_pair(t.root.symbol, result);
 }
 
 
 bool solver::status() {
-    return (particles.size() != 0);
-}
-
-void solver::clear() {
-    previousObservations.clear();
-    particles.clear();
-    size_t currentNbParticle = 0;
-
-    while(currentNbParticle < nbParticles) {
-        solverParticle newParticle = solverParticle(epl);
-
-        if(particles.count(newParticle.expNextObs[0]) > 0)
-            particles[newParticle.expNextObs[0]].push_back(newParticle);
-        else {
-            particles[newParticle.expNextObs[0]] = vector<solverParticle>();
-            particles[newParticle.expNextObs[0]].push_back(newParticle);
-        }
-
-        currentNbParticle++;
-    }
+    return (!particles.empty());
 }

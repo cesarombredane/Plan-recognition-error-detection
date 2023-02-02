@@ -1,8 +1,7 @@
-#include "src/headers/probabilityDistribution.h"
+#include "probabilityDistribution.h"
 
 // constructor
 probabilityDistribution::probabilityDistribution() = default;
-probabilityDistribution::probabilityDistribution(unordered_map<int, unordered_map<int,float>> _distribution):distribution(move(_distribution)) {}
 probabilityDistribution::probabilityDistribution(planLibrary& _pl) {
     for(const auto& it : _pl.getRules()) {
         if(this->distribution.count(it.second.getPrimitive()) == 0) this->distribution[it.second.getPrimitive()][it.first] = 1;
@@ -31,19 +30,6 @@ probabilityDistribution::~probabilityDistribution() = default;
 // functions
 const unordered_map<int, unordered_map<int, float>> &probabilityDistribution::getDistribution() {
     return this->distribution;
-}
-bool probabilityDistribution::isValid() const {
-    for(const auto& it : this->distribution) {
-        float sum = 0;
-        for(auto dit : it.second)
-            sum += dit.second;
-        if(sum != 1.0) return false;
-    }
-
-    return true;
-}
-void probabilityDistribution::setProb(int primitive, int element, float probability) {
-    this->distribution[primitive][element] = probability;
 }
 int probabilityDistribution::RNC(int i) const {
     random_device rd;

@@ -2,11 +2,10 @@
 #include "string"
 #include "unordered_map"
 #include "unordered_set"
-#include "rule.h"
-#include "bnflite.h"
+
+#include <rule.h>
 
 using namespace std;
-using namespace bnf;
 
 #ifndef PLANLABRARY_H
 #define PLANLABRARY_H
@@ -20,12 +19,11 @@ class planLibrary {
         const unordered_set<int>& getNonTerminals() const;
         const unordered_set<int>& getGoals() const;
         const unordered_map<int,rule>& getRules() const;
+
         bool isTerminal(int) const;
-        bool isGoal(int) const;
+
         void addSymbol(int, bool, bool);
         void addRule(const rule&);
-
-        string toString();
 
     private:
         unordered_set<int> terminals;

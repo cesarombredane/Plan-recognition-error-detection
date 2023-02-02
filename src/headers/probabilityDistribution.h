@@ -3,7 +3,7 @@
 #include "unordered_map"
 #include "random"
 
-#include "planLibrary.h"
+#include <planLibrary.h>
 
 using namespace std;
 
@@ -13,15 +13,12 @@ using namespace std;
 class probabilityDistribution {
     public:
         probabilityDistribution();
-        explicit probabilityDistribution(unordered_map<int, unordered_map<int,float>>);
         explicit probabilityDistribution(planLibrary& _pl);
         explicit probabilityDistribution(const unordered_set<int>&, float = 0.0);
 
         ~probabilityDistribution();
 
         const unordered_map<int, unordered_map<int,float>>& getDistribution();
-        bool isValid() const;
-        void setProb(int, int, float);
         int RNC(int i) const;
 
     private:

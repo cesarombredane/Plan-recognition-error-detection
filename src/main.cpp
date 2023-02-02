@@ -2,45 +2,36 @@
 #include <iomanip>
 #include <fstream>
 #include <ctime>
-#include "headers/extendedPlanLibrary.h"
-#include "headers/solver.h"
-#include "headers/CognitiveDistressManagement.h"
+#include "extendedPlanLibrary.h"
+#include "solver.h"
+#include "CognitiveDistressManagement.h"
 
 using namespace std;
 
-void showRes( map<string, map<int, map<float, vector<float>>>>& result, int nbLib, int nbIt, int libSize, bool AB, string resultPath) {
-    ofstream file(resultPath);
+void showRes( map<string, map<int, map<float, vector<int>>>>& result, int nbLib, int nbIt, int libSize, bool AB, const string& resultPath) {
+    cout << "result based on " << nbLib*nbIt << " tests (" << nbLib << " differents planLibrarys) for each scenario." << endl;
+    cout << "solver nbParticles set on 1000." << endl;
+    cout << "library size set on " << libSize << " with ";
 
-    if (file) {
-        file << "result based on " << nbLib*nbIt << " tests (" << nbLib << " differents planLibrarys) for each scenario." << endl;
-        file << "solver nbParticles set on 1000." << endl;
-        file << "library size set on " << libSize << " with ";
+    if (!AB) cout << "no ";
 
-        if (!AB)
-            file << "no ";
+    cout << "AnormalBehavior." << endl << endl;
 
-        file << "AnormalBehavior." << endl << endl;
+    for (auto& itMethod : result) {
+        cout << itMethod.first << " : " << endl << endl;
 
-        for (auto& itMethod : result) {
-            file << itMethod.first << " : " << endl << endl;
+        for (auto& itPrec : itMethod.second) {
+            if (itPrec.first != -1) cout << "precision : " << itPrec.first << endl;
 
-            for (auto& itPrec : itMethod.second) {
-                if (itPrec.first != -1)
-                    file << "precision : " << itPrec.first << endl;
+            cout << "noisePrediction\tP(effective)\tP(falsePositive)\tP(falseNegative)\tP(GoalFound)\tMoy(latency)" << endl;
 
-                file << "noise\tP(effective)\tP(falsePositive)\tP(falseNegative)\tP(GoalFound)\tMoy(latency)" << endl;
-
-                for (auto& itNoise : itPrec.second)
-                    file << setprecision (4) << itNoise.first << "\t" << itNoise.second[0] << "\t\t" << itNoise.second[1] << "\t\t\t" << itNoise.second[2]
-                            << "\t\t\t" << itNoise.second[3] << "\t\t" << itNoise.second[4] << endl;
-            }
-
-            file << endl;
+            for (auto& itNoise : itPrec.second)
+                cout << setprecision (4) << itNoise.first << "\t" << itNoise.second[0] << "\t\t" << itNoise.second[1] << "\t\t\t" << itNoise.second[2]
+                        << "\t\t\t" << itNoise.second[3] << "\t\t" << itNoise.second[4] << endl;
         }
-    }
 
-    else
-        cout << "ERROR : unable to create result file" << endl;
+        cout << endl;
+    }
 }
 
 vector<int> TestCdmMin(extendedPlanLibrary* ePl, bool distress) {
@@ -50,21 +41,17 @@ vector<int> TestCdmMin(extendedPlanLibrary* ePl, bool distress) {
     pair<int,vector<int>> curPlan = gP.generatePlan();
     solver s = solver(ePl, 1000);
 
-    CDMmin CDM = CDMmin(&s, ePl);
+    CDMMin CDM = CDMMin(&s, ePl);
 
     size_t DistressPoint; // set up of distress point
-    if (distress)
-        DistressPoint = rand () % curPlan.second.size();
-    else
-        DistressPoint = curPlan.second.size();
+    if (distress) DistressPoint = rand() % curPlan.second.size();
+    else DistressPoint = curPlan.second.size();
 
     for(size_t i = DistressPoint; i < curPlan.second.size(); i++) {
         int newActionID = rand() % ePl->ePlanLibrary->getTerminals().size();
         auto iter = ePl->ePlanLibrary->getTerminals().begin();
 
-        for(int j = 0; j < newActionID; j++)
-            iter++;
-
+        for(int j = 0; j < newActionID; j++) iter++;
         curPlan.second[i] = *(iter);
     }
 
@@ -74,8 +61,7 @@ vector<int> TestCdmMin(extendedPlanLibrary* ePl, bool distress) {
 
     int found = 0;
     for(size_t obs = 0; obs < curPlan.second.size(); obs++) {
-        if(s.getMaxGoal() == curPlan.first && found == 0)
-            found = 1;
+        if(s.getMaxGoal() == curPlan.first && found == 0) found = 1;
 
         s.addObservation(curPlan.second[obs]);
         CDM.update();
@@ -99,20 +85,17 @@ vector<int> TestCdmSum(extendedPlanLibrary* ePl, double prec, bool distress) {
     pair<int,vector<int>> curPlan = gP.generatePlan();
     solver s = solver(ePl, 1000);
 
-    CDMsum CDM = CDMsum(&s, ePl, prec);
+    CDMSum CDM = CDMSum(&s, ePl, prec);
 
     size_t DistressPoint;
-    if (distress)
-        DistressPoint = rand () % curPlan.second.size();
-    else
-        DistressPoint = curPlan.second.size();
+    if (distress) DistressPoint = rand () % curPlan.second.size();
+    else DistressPoint = curPlan.second.size();
 
     for(size_t i = DistressPoint; i < curPlan.second.size(); i++) {
         int newActionID = rand() % ePl->ePlanLibrary->getTerminals().size();
         auto iter = ePl->ePlanLibrary->getTerminals().begin();
 
-        for(int j = 0; j < newActionID; j++)
-            iter++;
+        for(int j = 0; j < newActionID; j++) iter++;
 
         curPlan.second[i] = *(iter);
     }
@@ -123,8 +106,7 @@ vector<int> TestCdmSum(extendedPlanLibrary* ePl, double prec, bool distress) {
 
     int found = 0;
     for(size_t obs = 0; obs < curPlan.second.size(); obs++) {
-        if(s.getMaxGoal() == curPlan.first && found == 0)
-            found = 1;
+        if(s.getMaxGoal() == curPlan.first && found == 0) found = 1;
 
         s.addObservation(curPlan.second[obs]);
         CDM.update();
@@ -148,20 +130,17 @@ vector<int> TestCdmSupport(extendedPlanLibrary* ePl, double prec, bool distress)
     pair<int,vector<int>> curPlan = gP.generatePlan();
     solver s = solver(ePl, 1000);
 
-    CDMsupport CDM = CDMsupport(&s, ePl, prec);
+    CDMSupport CDM = CDMSupport(&s, ePl, prec);
 
     size_t DistressPoint;
-    if (distress)
-        DistressPoint = rand () % curPlan.second.size();
-    else
-        DistressPoint = curPlan.second.size();
+    if (distress) DistressPoint = rand () % curPlan.second.size();
+    else DistressPoint = curPlan.second.size();
 
     for(size_t i = DistressPoint; i < curPlan.second.size(); i++) {
         int newActionID = rand() % ePl->ePlanLibrary->getTerminals().size();
         auto iter = ePl->ePlanLibrary->getTerminals().begin();
 
-        for(int j = 0; j < newActionID; j++)
-            iter++;
+        for(int j = 0; j < newActionID; j++) iter++;
 
         curPlan.second[i] = *(iter);
     }
@@ -172,8 +151,7 @@ vector<int> TestCdmSupport(extendedPlanLibrary* ePl, double prec, bool distress)
 
     int found = 0;
     for(size_t obs = 0; obs < curPlan.second.size(); obs++) {
-        if(s.getMaxGoal() == curPlan.first && found == 0)
-            found = 1;
+        if(s.getMaxGoal() == curPlan.first && found == 0) found = 1;
 
         s.addObservation(curPlan.second[obs]);
         CDM.update();
@@ -199,36 +177,33 @@ vector<int> TestCdmSupport(extendedPlanLibrary* ePl, double prec, bool distress)
  *  \param nbAction : size of plan library
  *  \param resultPath : path to result.txt
  */
-void FullTestCdm(bool distress, int nbLib, int nbIt, int nbAction, string resultPath) {
-    map<string, map<int, map<float, vector<float>>>> result;
+void FullTestCdm(bool distress, int nbLib, int nbIt, int nbAction, const string& resultPath) {
+    map<string, map<int, map<float, vector<int>>>> result;
     cout << "CALCULATION : distress = " << distress << " | nbAction = " << nbAction << " | nbLib = " << nbLib << " | nbIt = " << nbIt << endl;
 
     cout << "min calculation methode ..." << endl;
-    for (float noise = 0.0; noise < 0.4; noise += 0.1) { // variation of noise
-        float ABfound = 0;
-        float ABnotFound = 0;
-        float notABfound = 0;
-        float notABnotFound = 0;
-        float latency = 0;
-        float GoalFound = 0;
+    for (float noise = 0.0; noise < 0.4; noise += 0.1) { // variation of noisePrediction
+        int ABfound = 0;
+        int ABnotFound = 0;
+        int notABfound = 0;
+        int notABnotFound = 0;
+        int latency = 0;
+        int GoalFound = 0;
 
         for (int lib = 0; lib < nbLib; lib++) {
             extendedPlanLibrary ePl = extendedPlanLibrary(noise, 5, nbAction, 2, 3, 2);
 
             for (int it = 0; it < nbIt; it++) {
-                vector<int> result = TestCdmMin(&ePl, distress); // test
+                vector<int> resultMin = TestCdmMin(&ePl, distress); // test
 
                 // gestion of results
-                GoalFound += result[3];
-                if (result[0] == 0 && result[1] == 0)
-                    notABnotFound++;
-                else if ((result[0] == 0 && result[1] == 1) || (result[2] < 0))
-                    notABfound++;
-                else if (result[0] == 1 && result[1] == 0)
-                    ABnotFound++;
+                GoalFound += resultMin[3];
+                if (resultMin[0] == 0 && resultMin[1] == 0) notABnotFound++;
+                else if ((resultMin[0] == 0 && resultMin[1] == 1) || (resultMin[2] < 0)) notABfound++;
+                else if (resultMin[0] == 1 && resultMin[1] == 0) ABnotFound++;
                 else {
                     ABfound++;
-                    latency += result[2];
+                    latency += resultMin[2];
                 }
             }
         }
@@ -237,40 +212,35 @@ void FullTestCdm(bool distress, int nbLib, int nbIt, int nbAction, string result
         result["min"][-1][noise].push_back(notABfound / (nbLib * nbIt));
         result["min"][-1][noise].push_back(ABnotFound / (nbLib * nbIt));
         result["min"][-1][noise].push_back(GoalFound / (nbLib * nbIt));
-        if (ABfound != 0)
-            result["min"][-1][noise].push_back(latency / ABfound);
-        else
-            result["min"][-1][noise].push_back(0);
+        if (ABfound != 0) result["min"][-1][noise].push_back(latency / ABfound);
+        else result["min"][-1][noise].push_back(0);
     }
 
     cout << "sum calculation methode ..." << endl;
     for (float noise = 0.0; noise < 0.4; noise += 0.1) {
-        vector<double> precs{1.0, 3.0, 5.0, 10.0, 15.0, 20.0};
+        vector<int> precs{1, 3, 5, 10, 15, 20};
 
         for (auto& prec : precs) { // variation of precision
-            float ABfound = 0;
-            float ABnotFound = 0;
-            float notABfound = 0;
-            float notABnotFound = 0;
-            float latency = 0;
-            float GoalFound = 0;
+            int ABfound = 0;
+            int ABnotFound = 0;
+            int notABfound = 0;
+            int notABnotFound = 0;
+            int latency = 0;
+            int GoalFound = 0;
 
             for (int lib = 0; lib < nbLib; lib++) {
                 extendedPlanLibrary ePl = extendedPlanLibrary(noise, 5, nbAction, 2, 3, 2);
 
                 for (int it = 0; it < nbIt; it++) {
-                    vector<int> result = TestCdmSum(&ePl, prec, distress);
+                    vector<int> resultSum = TestCdmSum(&ePl, prec, distress);
 
-                    GoalFound += result[3];
-                    if (result[0] == 0 && result[1] == 0)
-                        notABnotFound++;
-                    else if ((result[0] == 0 && result[1] == 1) || (result[2] < 0))
-                        notABfound++;
-                    else if (result[0] == 1 && result[1] == 0)
-                        ABnotFound++;
+                    GoalFound += resultSum[3];
+                    if (resultSum[0] == 0 && resultSum[1] == 0) notABnotFound++;
+                    else if ((resultSum[0] == 0 && resultSum[1] == 1) || (resultSum[2] < 0)) notABfound++;
+                    else if (resultSum[0] == 1 && resultSum[1] == 0) ABnotFound++;
                     else {
                         ABfound++;
-                        latency += result[2];
+                        latency += resultSum[2];
                     }
                 }
             }
@@ -279,39 +249,34 @@ void FullTestCdm(bool distress, int nbLib, int nbIt, int nbAction, string result
             result["sum"][prec][noise].push_back(notABfound / (nbLib * nbIt));
             result["sum"][prec][noise].push_back(ABnotFound / (nbLib * nbIt));
             result["sum"][prec][noise].push_back(GoalFound / (nbLib * nbIt));
-            if (ABfound != 0)
-                result["sum"][prec][noise].push_back(latency / ABfound);
-            else
-                result["sum"][prec][noise].push_back(0);
+            if (ABfound != 0) result["sum"][prec][noise].push_back(latency / ABfound);
+            else result["sum"][prec][noise].push_back(0);
         }
     }
 
     cout << "support calculation methode ..." << endl;
     for (float noise = 0.0; noise < 0.4; noise += 0.1) {
-        for (double prec = 1.0; prec < 7; prec += 2) {
-            float ABfound = 0;
-            float ABnotFound = 0;
-            float notABfound = 0;
-            float notABnotFound = 0;
-            float latency = 0;
-            float GoalFound = 0;
+        for (int prec = 1; prec < 7; prec += 2) {
+            int ABfound = 0;
+            int ABnotFound = 0;
+            int notABfound = 0;
+            int notABnotFound = 0;
+            int latency = 0;
+            int GoalFound = 0;
 
             for (int lib = 0; lib < nbLib; lib++) {
                 extendedPlanLibrary ePl = extendedPlanLibrary(noise, 5, nbAction, 2, 3, 2);
 
                 for (int it = 0; it < nbIt; it++) {
-                    vector<int> result = TestCdmSupport(&ePl, prec, distress);
+                    vector<int> resultSupport = TestCdmSupport(&ePl, prec, distress);
 
-                    GoalFound += result[3];
-                    if (result[0] == 0 && result[1] == 0)
-                        notABnotFound++;
-                    else if ((result[0] == 0 && result[1] == 1) || (result[2] < 0))
-                        notABfound++;
-                    else if (result[0] == 1 && result[1] == 0)
-                        ABnotFound++;
+                    GoalFound += resultSupport[3];
+                    if (resultSupport[0] == 0 && resultSupport[1] == 0) notABnotFound++;
+                    else if ((resultSupport[0] == 0 && resultSupport[1] == 1) || (resultSupport[2] < 0)) notABfound++;
+                    else if (resultSupport[0] == 1 && resultSupport[1] == 0) ABnotFound++;
                     else {
                         ABfound++;
-                        latency += result[2];
+                        latency += resultSupport[2];
                     }
                 }
             }
@@ -320,10 +285,8 @@ void FullTestCdm(bool distress, int nbLib, int nbIt, int nbAction, string result
             result["support"][prec][noise].push_back(notABfound / (nbLib * nbIt));
             result["support"][prec][noise].push_back(ABnotFound / (nbLib * nbIt));
             result["support"][prec][noise].push_back(GoalFound / (nbLib * nbIt));
-            if (ABfound != 0)
-                result["support"][prec][noise].push_back(latency / ABfound);
-            else
-                result["support"][prec][noise].push_back(0);
+            if (ABfound != 0) result["support"][prec][noise].push_back(latency / ABfound);
+            else result["support"][prec][noise].push_back(0);
         }
     }
 
@@ -338,13 +301,13 @@ void FullTestCdm(bool distress, int nbLib, int nbIt, int nbAction, string result
  *  \param nbAction : number of terminals actions in the plan library
  *  \param strPath : path to result.txt
  */
-void testPrecSupport(int nbGoal, int nbAction, string strPath) {
+void testPrecSupport(int nbGoal, int nbAction, const string& strPath) {
     ofstream file(strPath);
     int iteration = 0;
 
     if (file) {
         file << "nbGoal = " << nbGoal << endl << "nbAction = " << nbAction << endl;
-        file << "prec\tnoise\tefficiency" << endl << endl;
+        file << "prec\tnoisePrediction\tefficiency" << endl << endl;
     }
 
     for (double prec = 0.0; prec <= 5.0; prec+= 0.1) {
@@ -375,13 +338,13 @@ void testPrecSupport(int nbGoal, int nbAction, string strPath) {
     }
 }
 
-void testPrecSum(int nbGoal, int nbAction, string strPath) {
+void testPrecSum(int nbGoal, int nbAction, const string& strPath) {
     ofstream file(strPath);
     int iteration = 0;
 
     if (file) {
         file << "nbGoal = " << nbGoal << endl << "nbAction = " << nbAction << endl;
-        file << "prec\tnoise\tefficiency" << endl << endl;
+        file << "prec\tnoisePrediction\tefficiency" << endl << endl;
     }
 
     for (double prec = 0.0; prec <= 5.0; prec+= 0.1) {
@@ -412,24 +375,29 @@ void testPrecSum(int nbGoal, int nbAction, string strPath) {
 }
 
 int main() {
-    // (bool distress, int nbLib, int nbIt, int nbAction, path)
+    // extendedPlanLibrary(float expectedNoise, int nbGoal, int nbTerminals, int treeDepth, int nbChildPerRule, int nbPlanPerNonTerminal)
+    extendedPlanLibrary ePl = extendedPlanLibrary();
+    cout << ePl.toString() << endl;
+    FullTestCdm(true, 1, 1, 10, "./out/resultTrue10.txt");
 
-    /*FullTestCdm(true, 100, 10, 10, "../resultTrue10.txt");
-    FullTestCdm(true, 100, 10, 100, "../resultTrue100.txt");
-    FullTestCdm(false, 100, 10, 10, "../resultFalse10.txt");
-    FullTestCdm(false, 100, 10, 100, "../resultFalse100.txt");
+    /*
+    FullTestCdm(true, 100, 10, 10, "./out/resultTrue10.txt");
+    FullTestCdm(true, 100, 10, 100, "./out/resultTrue100.txt");
+    FullTestCdm(false, 100, 10, 10, "./out/resultFalse10.txt");
+    FullTestCdm(false, 100, 10, 100, "./out/resultFalse100.txt");
 
-    testPrecSum(5, 10, "../resultPrecSum-5-10.txt");
-    testPrecSum(10, 10, "../resultPrecSum-10-10.txt");
-    testPrecSum(20, 10, "../resultPrecSum-20-10.txt");
-    testPrecSum(5, 45, "../resultPrecSum-5-45.txt");
-    testPrecSum(5, 100, "../resultPrecSum-5-100.txt");
+    testPrecSum(5, 10, "./out/resultPrecSum-5-10.txt");
+    testPrecSum(10, 10, "./out/resultPrecSum-10-10.txt");
+    testPrecSum(20, 10, "./out/resultPrecSum-20-10.txt");
+    testPrecSum(5, 45, "./out/resultPrecSum-5-45.txt");
+    testPrecSum(5, 100, "./out/resultPrecSum-5-100.txt");
 
-    testPrecSupport(5, 10, "../resultPrecSupport-5-10.txt");
-    testPrecSupport(10, 10, "../resultPrecSupport-10-10.txt");
-    testPrecSupport(20, 10, "../resultPrecSupport-20-10.txt");
-    testPrecSupport(5, 45, "../resultPrecSupport-5-45.txt");
-    testPrecSupport(5, 100, "../resultPrecSupport-5-100.txt");*/
+    testPrecSupport(5, 10, "./out/resultPrecSupport-5-10.txt");
+    testPrecSupport(10, 10, "./out/resultPrecSupport-10-10.txt");
+    testPrecSupport(20, 10, "./out/resultPrecSupport-20-10.txt");
+    testPrecSupport(5, 45, "./out/resultPrecSupport-5-45.txt");
+    testPrecSupport(5, 100, "./out/resultPrecSupport-5-100.txt");
+     */
 
     return 0;
 }

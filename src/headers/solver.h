@@ -1,16 +1,9 @@
-/*!
- *  \file solver.h
- *  \brief a plan recognition system using a particle filter
- *
- *  \version 1.0
- *  \author Jean Massardi
- */
+#include "vector"
+#include "map"
+#include "iostream"
 
-#include "extendedPlanLibrary.h"
-#include "rule.h"
-#include <vector>
-#include <map>
-#include <iostream>
+#include <extendedPlanLibrary.h>
+#include <rule.h>
 
 #ifndef SOLVER_H
 #define SOLVER_H
@@ -45,10 +38,10 @@ class treeNode {
          */
         int update();
 
-        extendedPlanLibrary* epl;/*!< pointer to an extended plan library */
-        int symbol;/*!< the action represented by the node */
-        int _rule;/*!< the rule used to form the goal */
-        bool status;/*!< is the current action ended (is a Terminal action or all the children are ended) */
+        extendedPlanLibrary* epl{};/*!< pointer to an extended plan library */
+        int symbol{};/*!< the action represented by the node */
+        int _rule{};/*!< the rule used to form the goal */
+        bool status{};/*!< is the current action ended (is a Terminal action or all the children are ended) */
         map<int,treeNode> children;/*!< all the children */
 };
 
@@ -87,9 +80,9 @@ class tree {
          */
         int updateFO();
 
-        extendedPlanLibrary* epl;/*!< pointer to an extended plan library */
+        extendedPlanLibrary* epl{};/*!< pointer to an extended plan library */
         treeNode root;/*!< the root of the plan tree */
-        int currentTerminalFO;
+        int currentTerminalFO{};
 };
 
 /*!
@@ -105,7 +98,7 @@ class solverParticle {
          *
          *  \param _epl : pointer to an extended plan library
          */
-        solverParticle(extendedPlanLibrary* _epl);
+        explicit solverParticle(extendedPlanLibrary* _epl);
 
         /*!
          *  \brief updating the particle
@@ -123,7 +116,7 @@ class solverParticle {
 /*!
  *  \class solver
  *  \brief Particle filter plan recognition
- *  the solver is used as a particule filter to recognise plan.
+ *  the solver is used as a particle filter to recognise plan.
  *  it generate, sort and select particles which fit the observation.
  */
 class solver {
@@ -157,27 +150,6 @@ class solver {
         map<int, int> getGoals();
 
         /*!
-         *  \brief Getter particles
-         *
-         *  \return the number of particles that support each goal
-         */
-        map<int, int> getParticles();
-
-        /*!
-         *  \brief Getter goal's probability
-         *
-         *  \return the possible goals and their probability to append
-         */
-        map<string,float> getProbGoals();
-
-        /*!
-         *  \brief Getter particles's probability
-         *
-         *  \return the possible goals and their probability to append
-         */
-        map<string,float> getProbParticles();
-
-        /*!
          *  \brief Getter max goal
          *
          *  \return the goal with the highest probability to append
@@ -204,25 +176,11 @@ class solver {
         bool addObservation(int obs);
 
         /*!
-         *  \brief Add observation
-         *
-         *  \param obs : the action name of the observation
-         */
-        bool addObservation(string obs);
-
-        /*!
          *  \brief generate a random plan
          *
          *  \return a goal and an ordered set of action which form the goal
          */
         pair<int,vector<int>> generatePlan();
-
-        /*!
-         *  \brief generate a random plan
-         *
-         *  \return a goal and an ordered set of action which form the goal
-         */
-        pair<int,vector<int>> generatePlanFO();
 
         /*!
          *  \brief Getter particles
@@ -231,14 +189,9 @@ class solver {
          */
         bool status();
 
-        /*!
-         *  \brief Clear the particles
-         */
-        void clear();
-
     private:
-        extendedPlanLibrary* epl;/*!< pointer to an extended plan library */
-        size_t nbParticles;/*!< number of particles */
+        extendedPlanLibrary* epl{};/*!< pointer to an extended plan library */
+        size_t nbParticles{};/*!< number of particles */
         vector<int> previousObservations;/*!< ordered list of all the previous observation */
         map<int, vector<solverParticle>> particles;/*!< all the particles sort by goals */
 

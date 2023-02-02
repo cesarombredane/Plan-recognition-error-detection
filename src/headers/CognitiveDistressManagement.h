@@ -1,10 +1,11 @@
-#include "extendedPlanLibrary.h"
-#include "solver.h"
-#include <vector>
-#include <map>
-#include <set>
-#include <iostream>
-#include <algorithm>
+#include "vector"
+#include "map"
+#include "set"
+#include "iostream"
+#include "algorithm"
+
+#include <extendedPlanLibrary.h>
+#include <solver.h>
 
 using namespace std;
 
@@ -18,8 +19,6 @@ class CognitiveDistressManagement {
         CognitiveDistressManagement();
 
         ~CognitiveDistressManagement();
-
-        double getProb();
 
         bool getAB() const;
 
@@ -42,40 +41,40 @@ class CognitiveDistressManagement {
 
         map<int,float> getActions(); 
 
-        map<int,set<int>> filterAAlpla(); 
+        map<int,set<int>> filterAAlpha();
 };
 
-class CDMmin:public CognitiveDistressManagement {
+class CDMMin: public CognitiveDistressManagement {
     public :
-        CDMmin(solver * s, extendedPlanLibrary* _epl);
+        CDMMin(solver * s, extendedPlanLibrary* _epl);
 
-        ~CDMmin();
+        ~CDMMin();
 
-        void updateAlpha();
-        void updateAnormalBehavior();
+        void updateAlpha() override;
+        void updateAnormalBehavior() override;
 };
 
-class CDMsum:public CognitiveDistressManagement {
+class CDMSum: public CognitiveDistressManagement {
     public :
-        CDMsum(solver * s, extendedPlanLibrary* _epl, double precision);
+        CDMSum(solver * s, extendedPlanLibrary* _epl, double precision);
 
-        ~CDMsum();
+        ~CDMSum();
 
-        void updateAlpha();
-        void updateAnormalBehavior();
+        void updateAlpha() override;
+        void updateAnormalBehavior() override;
 
     private :
         double precision;
 };
 
-class CDMsupport:public CognitiveDistressManagement {
+class CDMSupport: public CognitiveDistressManagement {
     public :
-        CDMsupport(solver * s, extendedPlanLibrary* _epl, double precision);
+        CDMSupport(solver * s, extendedPlanLibrary* _epl, double precision);
 
-        ~CDMsupport();
+        ~CDMSupport();
 
-        void updateAlpha();
-        void updateAnormalBehavior();
+        void updateAlpha() override;
+        void updateAnormalBehavior() override;
 
     private :
         double precision;

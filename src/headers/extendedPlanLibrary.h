@@ -1,29 +1,25 @@
 #include "tuple"
 #include "string"
 #include "random"
-#include "planLibrary.h"
-#include "probabilityDistribution.h"
-#include "bnflite.h"
+#include "algorithm"
 
-using namespace bnf;
+#include <planLibrary.h>
+#include <probabilityDistribution.h>
 
 #ifndef EXTENDEDPLANLIBRARY_H
 #define EXTENDEDPLANLIBRARY_H
 
 class extendedPlanLibrary {
     public:
-        explicit extendedPlanLibrary(const char*);
-        explicit extendedPlanLibrary(planLibrary*);
-        extendedPlanLibrary(const extendedPlanLibrary&);
-        explicit extendedPlanLibrary(float = 0.0, int = 5,int = 10, int = 2, int = 3, int = 2);
+        explicit extendedPlanLibrary(float = 0.0, int = 5, int = 10, int = 2, int = 3, int = 2);
 
         ~extendedPlanLibrary();
 
         string toString();
 
         planLibrary* ePlanLibrary;
-        probabilityDistribution decisionModel;
-        probabilityDistribution noise;
+        probabilityDistribution ruleDecisionModel;
+        probabilityDistribution noisePrediction;
         map<string,int> ids;
         map<int, string> revIds;
 };

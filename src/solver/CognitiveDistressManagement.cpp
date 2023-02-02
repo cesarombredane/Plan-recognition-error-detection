@@ -1,4 +1,4 @@
-#include "src/headers/CognitiveDistressManagement.h"
+#include "CognitiveDistressManagement.h"
 
 
 // -- CognitiveDistressManagement ----------------
@@ -24,129 +24,101 @@ bool CognitiveDistressManagement::getAB() const {
 void CognitiveDistressManagement::update() {
     updateAlpha();
 
-    int temp = proba;
+    double temp = proba;
     proba = temp + alpha*(1-temp);
 
     updateAnormalBehavior();
 
-    if (!AnormalBehavior)
-        oldParticles = s->particles;
+    if (!AnormalBehavior) oldParticles = s->particles;
 }
 
 map<int,float> CognitiveDistressManagement::getGoals() {
-    map<int,float> resu;
+    map<int,float> result;
 
     for(const auto& itObs : oldParticles) {
         for(const auto& itPar : itObs.second) {
-            if(resu.count(itPar.goal) > 0)
-                resu[itPar.goal]+=1.0/(float)s->nbParticles;
-            else
-                resu[itPar.goal] = 1.0/(float)s->nbParticles;
+            if(result.count(itPar.goal) > 0) result[itPar.goal]+= 1 / (float)s->nbParticles;
+            else result[itPar.goal] = 1 / (float)s->nbParticles;
         }
     }
 
-    return resu;
+    return result;
 }
 
 map<int,float> CognitiveDistressManagement::getActions() {
-    map<int,float> resu;
+    map<int,float> result;
 
-    for(auto itN : ePL->noise.getDistribution()) {
-        resu[itN.first] = itN.second[s->getLastObservation()]*(1.0/ePL->noise.getDistribution().size());
+    for(auto itN : ePL->noisePrediction.getDistribution()) {
+        result[itN.first] = itN.second[s->getLastObservation()] * (1.0 / ePL->noisePrediction.getDistribution().size());
         float dem = 0.0;
 
-        for(auto itO : itN.second)
-            dem += itO.second*(1.0/ePL->noise.getDistribution().size());
+        for(auto itO : itN.second) dem += itO.second*(1.0/ePL->noisePrediction.getDistribution().size());
 
-        if(dem == 0.0)
-            resu[itN.first] = 0.0;
-        else
-            resu[itN.first] = resu[itN.first]/dem;
+        if(dem == 0.0) result[itN.first] = 0.0;
+        else result[itN.first] = result[itN.first] / dem;
     }
 
-    return resu;
+    return result;
 }
 
-map<int,set<int>> CognitiveDistressManagement::filterAAlpla() {
-    map<int,set<int>> resu;
+map<int,set<int>> CognitiveDistressManagement::filterAAlpha() {
+    map<int,set<int>> result;
     map<int,set<int>> nextPossibleActions;
     set<int> allActions(ePL->ePlanLibrary->getTerminals().begin(),  ePL->ePlanLibrary->getTerminals().end());
 
-    for(auto itG : ePL->ePlanLibrary->getGoals())
-        resu[itG] = allActions;
+    for(auto itG : ePL->ePlanLibrary->getGoals()) result[itG] = allActions;
 
     vector<solverParticle> allParticles;
 
-    for(auto itOP : oldParticles)
-        allParticles.insert(allParticles.end(),itOP.second.begin(),itOP.second.end());
+    for(auto itOP : oldParticles) allParticles.insert(allParticles.end(),itOP.second.begin(),itOP.second.end());
+    for(const auto& itAP : allParticles) nextPossibleActions[itAP.goal].insert(itAP.planTree.currentTerminalFO);
+    for(const auto& itNPA1 :nextPossibleActions) for(auto itNPA2 : itNPA1.second) result[itNPA1.first].erase(result[itNPA1.first].find(itNPA2));
 
-    for(auto itAP : allParticles)
-        nextPossibleActions[itAP.goal].insert(itAP.planTree.currentTerminalFO);
-
-    for(auto itNPA1 :nextPossibleActions)
-        for(auto itNPA2 : itNPA1.second)
-            resu[itNPA1.first].erase(resu[itNPA1.first].find(itNPA2));
-
-    return resu;
+    return result;
 }
 
 
-// -- CDMmin -------------------------------------
-CDMmin::CDMmin(solver * _s, extendedPlanLibrary* _epl) : CognitiveDistressManagement(_s, _epl) {};
-CDMmin::~CDMmin() {}
+// -- CDMMin -------------------------------------
+CDMMin::CDMMin(solver * _s, extendedPlanLibrary* _epl) : CognitiveDistressManagement(_s, _epl) {}
+CDMMin::~CDMMin() = default;
 
-void CDMmin::updateAlpha() {
+void CDMMin::updateAlpha() {
     alpha = 1.0;
     map<int,float> G = getGoals();
     map<int,float> A = getActions();
-    map<int,set<int>> fAlpha = filterAAlpla();
+    map<int,set<int>> fAlpha = filterAAlpha();
 
-    for(auto itG : G)
-        for(auto itfA : fAlpha[itG.first])
-            if(A.count(itfA) > 0)
-                alpha = min((float) alpha, itG.second*A[itfA]); // based on fuzzy logic
+    for(auto itG : G) for(auto itfA : fAlpha[itG.first]) if(A.count(itfA) > 0) alpha = min((float) alpha, itG.second*A[itfA]); // based on fuzzy logic
 }
-void CDMmin::updateAnormalBehavior() {
-    if (proba > 0.5)
-            AnormalBehavior = true;
+void CDMMin::updateAnormalBehavior() {
+    if (proba > 0.5) AnormalBehavior = true;
 }
 
-// -- CDMsum -------------------------------------
-CDMsum::CDMsum(solver * _s, extendedPlanLibrary* _epl, double _precision) : CognitiveDistressManagement(_s, _epl), precision(_precision) {};
-CDMsum::~CDMsum() = default;
+// -- CDMSum -------------------------------------
+CDMSum::CDMSum(solver * _s, extendedPlanLibrary* _epl, double _precision) : CognitiveDistressManagement(_s, _epl), precision(_precision) {}
+CDMSum::~CDMSum() = default;
 
-void CDMsum::updateAlpha() {
+void CDMSum::updateAlpha() {
     alpha = 0.0;
     map<int,float> G = getGoals();
     map<int,float> A = getActions();
-    map<int,set<int>> fAlpha = filterAAlpla();
+    map<int,set<int>> fAlpha = filterAAlpha();
 
-    for(auto itG : G)
-        for(auto itfA : fAlpha[itG.first])
-            if(A.count(itfA) > 0)
-                alpha += itG.second*A[itfA];
+    for(auto itG : G) for(auto itfA : fAlpha[itG.first]) if(A.count(itfA) > 0) alpha += itG.second*A[itfA];
 }
-void CDMsum::updateAnormalBehavior() {
-    if (proba > 1.0-(precision/100))
-            AnormalBehavior = true;
+void CDMSum::updateAnormalBehavior() {
+    if (proba > 1.0-(precision/100)) AnormalBehavior = true;
 }
 
-// -- CDMsupport ---------------------------------
+// -- CDMSupport ---------------------------------
 // only usable with particles filter plan recognition
-CDMsupport::~CDMsupport() = default;
-CDMsupport::CDMsupport(solver * _s, extendedPlanLibrary* _epl, double _precision) : CognitiveDistressManagement(_s, _epl), precision(_precision) {};
+CDMSupport::~CDMSupport() = default;
+CDMSupport::CDMSupport(solver * _s, extendedPlanLibrary* _epl, double _precision) : CognitiveDistressManagement(_s, _epl), precision(_precision) {}
 
-void CDMsupport::updateAlpha() {
-    if(oldParticles.count(s->getLastObservation()) == 0)
-        alpha = 1.0;
-    else if(oldParticles[s->getLastObservation()].size() < s->getSize()*precision/100)
-        alpha = 1.0;
-    else
-        alpha = 0.0;
+void CDMSupport::updateAlpha() {
+    if(oldParticles.count(s->getLastObservation()) == 0 || oldParticles[s->getLastObservation()].size() < s->getSize()*precision/100) alpha = 1.0;
+    else alpha = 0.0;
 }
-void CDMsupport::updateAnormalBehavior() {
-    if (proba > 0.5)
-            AnormalBehavior = true;
+void CDMSupport::updateAnormalBehavior() {
+    if (proba > 0.5) AnormalBehavior = true;
 }
-
-
