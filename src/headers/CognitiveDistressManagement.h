@@ -15,7 +15,6 @@ using namespace std;
 class CognitiveDistressManagement {
     public :
         CognitiveDistressManagement(solver * s, extendedPlanLibrary* _epl);
-
         CognitiveDistressManagement();
 
         ~CognitiveDistressManagement();
@@ -23,9 +22,7 @@ class CognitiveDistressManagement {
         bool getAB() const;
 
         void update();
-
         virtual void updateAlpha() {}
-
         virtual void updateAnormalBehavior() {}
 
     protected :
@@ -37,28 +34,26 @@ class CognitiveDistressManagement {
         double alpha{};
         map<int, vector<solverParticle>> oldParticles;
 
-        map<int,float> getGoals(); 
-
-        map<int,float> getActions(); 
-
+        map<int,float> getGoals();
+        map<int,float> getActions();
         map<int,set<int>> filterAAlpha();
 };
 
-class CDMMin: public CognitiveDistressManagement {
+class minCDM: public CognitiveDistressManagement {
     public :
-        CDMMin(solver * s, extendedPlanLibrary* _epl);
+        minCDM(solver * s, extendedPlanLibrary* _epl);
 
-        ~CDMMin();
+        ~minCDM();
 
         void updateAlpha() override;
         void updateAnormalBehavior() override;
 };
 
-class CDMSum: public CognitiveDistressManagement {
+class sumCDM: public CognitiveDistressManagement {
     public :
-        CDMSum(solver * s, extendedPlanLibrary* _epl, double precision);
+        sumCDM(solver * s, extendedPlanLibrary* _epl, double precision);
 
-        ~CDMSum();
+        ~sumCDM();
 
         void updateAlpha() override;
         void updateAnormalBehavior() override;
@@ -67,11 +62,11 @@ class CDMSum: public CognitiveDistressManagement {
         double precision;
 };
 
-class CDMSupport: public CognitiveDistressManagement {
+class supportCDM: public CognitiveDistressManagement {
     public :
-        CDMSupport(solver * s, extendedPlanLibrary* _epl, double precision);
+        supportCDM(solver * s, extendedPlanLibrary* _epl, double precision);
 
-        ~CDMSupport();
+        ~supportCDM();
 
         void updateAlpha() override;
         void updateAnormalBehavior() override;

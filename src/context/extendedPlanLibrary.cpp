@@ -137,7 +137,7 @@ extendedPlanLibrary::extendedPlanLibrary(float noise, int nbGoal, int nbTerminal
     this->noisePrediction = probabilityDistribution(this->ePlanLibrary->getTerminals(), noise);
 
     // create the reverse id map
-    for(const auto& it : this->ids) this->revIds[it.second] = it.first;
+    for(const auto& it : this->ids) this->reverseIds[it.second] = it.first;
 }
 
 // destructor
@@ -147,29 +147,35 @@ extendedPlanLibrary::~extendedPlanLibrary() = default;
 string extendedPlanLibrary::toString() {
     string result;
 
+    // print the goals
     result += "Goals : | ";
-    for (auto it : this->ePlanLibrary->getGoals()) result += this->revIds[it] + " | ";
+    for (auto it : this->ePlanLibrary->getGoals()) result += this->reverseIds[it] + " | ";
 
+    // print the terminal symbols
     result += "\nTerminals : | ";
-    for (auto it : this->ePlanLibrary->getTerminals()) result += this->revIds[it] + " | ";
+    for (auto it : this->ePlanLibrary->getTerminals()) result += this->reverseIds[it] + " | ";
 
+    // print the non-terminal symbols
     result += "\nNonTerminals : | ";
-    for (auto it : this->ePlanLibrary->getNonTerminals()) result += this->revIds[it] + " | ";
+    for (auto it : this->ePlanLibrary->getNonTerminals()) result += this->reverseIds[it] + " | ";
 
+    // print the rules
     result += "\nRules :\n";
-    for (auto it : this->ePlanLibrary->getRules()) result += it.second.toString(&this->revIds) + "\n";
+    for (auto it : this->ePlanLibrary->getRules()) result += it.second.toString(&this->reverseIds) + "\n";
 
-    result += "DecisionModel : \n";
+    // print the rule decision model
+    result += "RuleDecisionModel : \n";
     for (const auto& it : this->ruleDecisionModel.getDistribution()) {
-        result += this->revIds[it.first] + " = | ";
+        result += this->reverseIds[it.first] + " = | ";
         for (auto it2 : it.second) result += to_string(it2.first) + "(" + to_string(it2.second) + ") | ";
         result += "\n";
     }
 
+    // print the noise prediction model
     result += "Noise : \n";
     for (const auto& it : this->noisePrediction.getDistribution()) {
-        result += this->revIds[it.first] + " = | ";
-        for (auto it2 : it.second) result += this->revIds[it2.first] + "(" + to_string(it2.second) + ") | ";
+        result += this->reverseIds[it.first] + " = | ";
+        for (auto it2 : it.second) result += this->reverseIds[it2.first] + "(" + to_string(it2.second) + ") | ";
         result += "\n";
     }
 

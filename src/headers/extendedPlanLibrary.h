@@ -21,7 +21,7 @@ class extendedPlanLibrary {
         probabilityDistribution ruleDecisionModel;
         probabilityDistribution noisePrediction;
         map<string,int> ids;
-        map<int, string> revIds;
+        map<int, string> reverseIds;
 };
 
 #endif // EXTENDEDPLANLIBRARY_H

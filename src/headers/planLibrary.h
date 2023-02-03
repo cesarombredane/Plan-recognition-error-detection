@@ -19,7 +19,6 @@ class planLibrary {
         const unordered_set<int>& getNonTerminals() const;
         const unordered_set<int>& getGoals() const;
         const unordered_map<int,rule>& getRules() const;
-
         bool isTerminal(int) const;
 
         void addSymbol(int, bool, bool);

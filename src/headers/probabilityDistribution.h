@@ -19,7 +19,7 @@ class probabilityDistribution {
         ~probabilityDistribution();
 
         const unordered_map<int, unordered_map<int,float>>& getDistribution();
-        int RNC(int i) const;
+        int getRandomValue(int i) const;
 
     private:
         unordered_map<int, unordered_map<int,float>> distribution;
