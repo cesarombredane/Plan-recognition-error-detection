@@ -1,34 +1,22 @@
 # Plan recognition and Noise detection
-
 ## Description
-
 Description
 
-## Getting Started
-
-
-
-### Dependencies
-
+## Dependencies
 - C++ 14
 
-### Executing program
-
-- Main explanation
-- Main modification
-```
-examples
-```
-
 ## Authors
-
-- [Cesar Ombredane](https://github.com/cesarombredane) : Main Dev
-
-## Version History
-
-* Beta 0.1
-  * just the code
+[Cesar Ombredane](https://github.com/cesarombredane)
 
 ## License
+Open source
 
-OPEN SOURCE
+## TODO
+- README description
+- README how to execute
+- solver optimisation & comment
+- CDM optimisation & comment
+- main optimisation & comment
+- main preset test
+- code documentation
+- documentation (articles)
