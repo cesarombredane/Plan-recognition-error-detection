@@ -58,7 +58,7 @@ public:
   /*!
    *  \brief Getter primitive
    */
-  const int getPrimitive() const;
+  int getPrimitive() const;
 
   /*!
    *  \brief Getter children

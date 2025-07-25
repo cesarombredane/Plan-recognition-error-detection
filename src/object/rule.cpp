@@ -49,7 +49,7 @@ rule::~rule() {}
 
 // functions
 
-const int rule::getPrimitive() const
+int rule::getPrimitive() const
 {
     return primitive;
 }

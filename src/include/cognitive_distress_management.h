@@ -53,12 +53,12 @@ public:
     /*!
      *  \brief Getter prob
      */
-    const double getProb();
+    double getProb();
 
     /*!
      *  \brief Getter anormal behavior
      */
-    const bool getAB();
+    bool getAB();
 
     /*!
      *  \brief Update

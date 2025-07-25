@@ -16,12 +16,12 @@ CognitiveDistressManagement::CognitiveDistressManagement() {}
 CognitiveDistressManagement::~CognitiveDistressManagement() {}
 
 // getters
-const double CognitiveDistressManagement::getProb()
+double CognitiveDistressManagement::getProb()
 {
     return proba;
 }
 
-const bool CognitiveDistressManagement::getAB()
+bool CognitiveDistressManagement::getAB()
 {
     return AnormalBehavior;
 }

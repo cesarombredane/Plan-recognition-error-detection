@@ -872,9 +872,9 @@ namespace bnf
             _safe_delete(this);
         }
         friend _Cycle operator*(int x, const _Tie &link);
-        friend _Cycle Repeat(int at_least, const Rule &rule, int total = maxLexemLength, int limit = maxLexemLength);
-        friend _Cycle Iterate(int at_least, const Lexem &lexem, int total = maxLexemLength, int limit = maxLexemLength);
-        friend _Cycle Series(int at_least, const Token &token, int total = maxLexemLength, int limit = maxLexemLength);
+        friend _Cycle Repeat(int at_least, const Rule &rule, int total, int limit);
+        friend _Cycle Iterate(int at_least, const Lexem &lexem, int total, int limit);
+        friend _Cycle Series(int at_least, const Token &token, int total, int limit);
     };
     inline _Cycle _Tie::operator*()
     {
@@ -892,15 +892,15 @@ namespace bnf
     {
         return _Cycle((int)x, link);
     }
-    inline _Cycle Repeat(int at_least, const Rule &rule, int total, int limit)
+    inline _Cycle Repeat(int at_least, const Rule &rule, int total = maxLexemLength, int limit = maxLexemLength)
     {
         return _Cycle(at_least, rule, total, limit);
     }
-    inline _Cycle Iterate(int at_least, const Lexem &lexem, int total, int limit)
+    inline _Cycle Iterate(int at_least, const Lexem &lexem, int total = maxLexemLength, int limit = maxLexemLength)
     {
         return _Cycle(at_least, lexem, total, limit);
     }
-    inline _Cycle Series(int at_least, const Token &token, int total, int limit)
+    inline _Cycle Series(int at_least, const Token &token, int total = maxLexemLength, int limit = maxLexemLength)
     {
         return _Cycle(at_least, token, total, limit);
     }

@@ -512,22 +512,22 @@ void testPrecSum(int nbGoal, int nbAction, string strPath)
 int main()
 {
     // (bool distress, int nbLib, int nbIt, int nbAction, path)
-    // FullTestCdm(true, 100, 10, 10, "../resultTrue10.txt");
-    // FullTestCdm(true, 100, 10, 100, "../resultTrue100.txt");
-    // FullTestCdm(false, 100, 10, 10, "../resultFalse10.txt");
-    // FullTestCdm(false, 100, 10, 100, "../resultFalse100.txt");
+    // FullTestCdm(true, 100, 10, 10, "../result/True10.txt");
+    // FullTestCdm(true, 100, 10, 100, "../result/True100.txt");
+    // FullTestCdm(false, 100, 10, 10, "../result/False10.txt");
+    // FullTestCdm(false, 100, 10, 100, "../result/False100.txt");
 
-    testPrecSum(5, 10, "../resultPrecSum-5-10.txt");
-    testPrecSum(10, 10, "../resultPrecSum-10-10.txt");
-    testPrecSum(20, 10, "../resultPrecSum-20-10.txt");
-    testPrecSum(5, 45, "../resultPrecSum-5-45.txt");
-    testPrecSum(5, 100, "../resultPrecSum-5-100.txt");
+    testPrecSum(5, 10, "../result/PrecSum-5-10.txt");
+    testPrecSum(10, 10, "../result/PrecSum-10-10.txt");
+    testPrecSum(20, 10, "../result/PrecSum-20-10.txt");
+    testPrecSum(5, 45, "../result/PrecSum-5-45.txt");
+    testPrecSum(5, 100, "../result/PrecSum-5-100.txt");
 
-    testPrecSupport(5, 10, "../resultPrecSupport-5-10.txt");
-    testPrecSupport(10, 10, "../resultPrecSupport-10-10.txt");
-    testPrecSupport(20, 10, "../resultPrecSupport-20-10.txt");
-    testPrecSupport(5, 45, "../resultPrecSupport-5-45.txt");
-    testPrecSupport(5, 100, "../resultPrecSupport-5-100.txt");
+    testPrecSupport(5, 10, "../result/PrecSupport-5-10.txt");
+    testPrecSupport(10, 10, "../result/recSupport-10-10.txt");
+    testPrecSupport(20, 10, "../result/PrecSupport-20-10.txt");
+    testPrecSupport(5, 45, "../result/PrecSupport-5-45.txt");
+    testPrecSupport(5, 100, "../result/PrecSupport-5-100.txt");
 
     return 0;
 }
