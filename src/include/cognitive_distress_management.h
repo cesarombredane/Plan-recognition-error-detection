@@ -8,7 +8,7 @@
  *  \author César Ombredane
  */
 
-#include "extendedPlanLibrary.h"
+#include "extended_plan_library.h"
 #include "solver.h"
 #include <vector>
 #include <map>

@@ -18,9 +18,9 @@
 #include <iomanip>
 #include <fstream>
 #include <ctime>
-#include "extendedPlanLibrary.h"
-#include "solver.h"
-#include "CognitiveDistressManagement.h"
+#include "../include/extended_plan_library.h"
+#include "../include/solver.h"
+#include "../include/cognitive_distress_management.h"
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "probabilityDistribution.h"
+#include "../include/probability_distribution.h"
 #include <random>
 
 // ctor & dtor

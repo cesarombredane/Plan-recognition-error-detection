@@ -1,6 +1,6 @@
 #include <vector>
 #include <utility>
-#include "rule.h"
+#include "../include/rule.h"
 #include <string>
 
 // ctor & dtor

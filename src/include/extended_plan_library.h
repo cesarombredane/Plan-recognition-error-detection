@@ -6,8 +6,8 @@
  *  \author Jean Massardi
  */
 
-#include "planLibrary.h"
-#include "probabilityDistribution.h"
+#include "plan_library.h"
+#include "probability_distribution.h"
 #include <utility>
 #include <map>
 

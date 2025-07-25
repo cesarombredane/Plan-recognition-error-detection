@@ -1,5 +1,5 @@
-#include "planLibrary.h"
-#include "bnflite.h"
+#include "../include/plan_library.h"
+#include "../include/bnflite.h"
 
 using namespace bnf;
 

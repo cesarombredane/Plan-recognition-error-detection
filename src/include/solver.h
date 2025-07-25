@@ -6,7 +6,7 @@
  *  \author Jean Massardi
  */
 
-#include "extendedPlanLibrary.h"
+#include "extended_plan_library.h"
 #include "rule.h"
 #include <vector>
 #include <map>

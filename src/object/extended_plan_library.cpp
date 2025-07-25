@@ -1,7 +1,7 @@
 #include <tuple>
-#include "extendedPlanLibrary.h"
-#include "probabilityDistribution.h"
-#include "bnflite.h"
+#include "../include/extended_plan_library.h"
+#include "../include/probability_distribution.h"
+#include "../include/bnflite.h"
 #include "string"
 
 using namespace bnf;

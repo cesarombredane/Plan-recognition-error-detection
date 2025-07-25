@@ -1,4 +1,4 @@
-#include "CognitiveDistressManagement.h"
+#include "../include/cognitive_distress_management.h"
 
 // -- CognitiveDistressManagement ----------------
 
