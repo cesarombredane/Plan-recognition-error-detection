@@ -1,0 +1,283 @@
+# depslib dependency file v1.0
+1579552174 source:/home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/main.cpp
+	<iostream>
+	<fstream>
+	<ctime>
+	"extendedPlanLibrary.h"
+	"solver.h"
+	"testSolver.h"
+	"CognitiveDistressManagement.h"
+
+1578966773 /home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/include/extendedPlanLibrary.h
+	"planLibrary.h"
+	"probabilityDistribution.h"
+	<utility>
+	<map>
+
+1562608309 /home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/include/planLibrary.h
+	<iostream>
+	<unordered_set>
+	<unordered_map>
+	<string>
+	"rule.h"
+
+1562608309 /home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/include/rule.h
+	<iostream>
+	<string>
+	<vector>
+	<map>
+	<utility>
+
+1562608309 /home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/include/probabilityDistribution.h
+	<iostream>
+	<unordered_set>
+	<unordered_map>
+	"planLibrary.h"
+
+1573442631 /home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/include/solver.h
+	"extendedPlanLibrary.h"
+	"rule.h"
+	<vector>
+	<map>
+	<iostream>
+
+1562608309 /home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/include/testSolver.h
+	<vector>
+	<map>
+	<utility>
+	"solver.h"
+	"extendedPlanLibrary.h"
+
+1579534481 /home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/include/CognitiveDistressManagement.h
+	"extendedPlanLibrary.h"
+	"solver.h"
+	<vector>
+	<map>
+	<set>
+	<iostream>
+	<algorithm>
+
+1574782649 source:/home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/Plan_Library/extendedPlanLibrary.cpp
+	<tuple>
+	"extendedPlanLibrary.h"
+	"probabilityDistribution.h"
+	"bnflite.h"
+	"string"
+
+1562608309 /home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/include/bnflite.h
+	<string.h>
+	<string>
+	<list>
+	<vector>
+	<bitset>
+	<algorithm>
+	<typeinfo>
+
+1562608309 source:/home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/Plan_Library/planLibrary.cpp
+	"planLibrary.h"
+	"bnflite.h"
+
+1562608309 source:/home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/Plan_Library/probabilityDistribution.cpp
+	"probabilityDistribution.h"
+	<random>
+
+1562608309 source:/home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/Plan_Library/rule.cpp
+	<vector>
+	<utility>
+	"rule.h"
+	<string>
+
+1579534595 source:/home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/src/CognitiveDistressManagement.cpp
+	"CognitiveDistressManagement.h"
+
+1573442631 source:/home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/src/solver/solver.cpp
+	"solver.h"
+
+1562608310 source:/home/jean/Desktop/JeanM_Doctorat/Plan Recognition/PARC/src/solver/testSolver.cpp
+	"testSolver.h"
+
+1591279578 source:/home/enderguard/Documents/AgeWell/PARC-MINE/main.cpp
+	<iostream>
+	<iomanip>
+	<fstream>
+	<ctime>
+	"extendedPlanLibrary.h"
+	"solver.h"
+	"testSolver.h"
+	"CognitiveDistressManagement.h"
+
+1590312752 /home/enderguard/Documents/AgeWell/PARC-MINE/include/extendedPlanLibrary.h
+	"planLibrary.h"
+	"probabilityDistribution.h"
+	<utility>
+	<map>
+
+1589879843 /home/enderguard/Documents/AgeWell/PARC-MINE/include/planLibrary.h
+	<iostream>
+	<unordered_set>
+	<unordered_map>
+	<string>
+	"rule.h"
+
+1589826349 /home/enderguard/Documents/AgeWell/PARC-MINE/include/rule.h
+	<iostream>
+	<string>
+	<vector>
+	<map>
+	<utility>
+
+1589889837 /home/enderguard/Documents/AgeWell/PARC-MINE/include/probabilityDistribution.h
+	<iostream>
+	<unordered_set>
+	<unordered_map>
+	"planLibrary.h"
+
+1591273857 /home/enderguard/Documents/AgeWell/PARC-MINE/include/solver.h
+	"extendedPlanLibrary.h"
+	"rule.h"
+	<vector>
+	<map>
+	<iostream>
+
+1589828665 /home/enderguard/Documents/AgeWell/PARC-MINE/include/testSolver.h
+	<vector>
+	<map>
+	<utility>
+	"solver.h"
+	"extendedPlanLibrary.h"
+
+1591278638 /home/enderguard/Documents/AgeWell/PARC-MINE/include/CognitiveDistressManagement.h
+	"extendedPlanLibrary.h"
+	"solver.h"
+	<vector>
+	<map>
+	<set>
+	<iostream>
+	<algorithm>
+
+1590312747 source:/home/enderguard/Documents/AgeWell/PARC-MINE/Plan_Library/extendedPlanLibrary.cpp
+	<tuple>
+	"extendedPlanLibrary.h"
+	"probabilityDistribution.h"
+	"bnflite.h"
+	"string"
+
+1562608309 /home/enderguard/Documents/AgeWell/PARC-MINE/include/bnflite.h
+	<string.h>
+	<string>
+	<list>
+	<vector>
+	<bitset>
+	<algorithm>
+	<typeinfo>
+
+1589879842 source:/home/enderguard/Documents/AgeWell/PARC-MINE/Plan_Library/planLibrary.cpp
+	"planLibrary.h"
+	"bnflite.h"
+
+1589879842 source:/home/enderguard/Documents/AgeWell/PARC-MINE/Plan_Library/probabilityDistribution.cpp
+	"probabilityDistribution.h"
+	<random>
+
+1589879841 source:/home/enderguard/Documents/AgeWell/PARC-MINE/Plan_Library/rule.cpp
+	<vector>
+	<utility>
+	"rule.h"
+	<string>
+
+1591279601 source:/home/enderguard/Documents/AgeWell/PARC-MINE/src/CognitiveDistressManagement.cpp
+	"CognitiveDistressManagement.h"
+
+1590313909 source:/home/enderguard/Documents/AgeWell/PARC-MINE/src/solver/solver.cpp
+	"solver.h"
+
+1589828965 source:/home/enderguard/Documents/AgeWell/PARC-MINE/src/solver/testSolver.cpp
+	"testSolver.h"
+
+1593949194 source:d:\age-well\parc-new\code\plan_library\extendedplanlibrary.cpp
+	<tuple>
+	"extendedPlanLibrary.h"
+	"probabilityDistribution.h"
+	"bnflite.h"
+	"string"
+
+1594736548 d:\age-well\parc-new\code\include\extendedplanlibrary.h
+	"planLibrary.h"
+	"probabilityDistribution.h"
+	<utility>
+	<map>
+
+1594724294 d:\age-well\parc-new\code\include\planlibrary.h
+	<iostream>
+	<unordered_set>
+	<unordered_map>
+	<string>
+	"rule.h"
+
+1594721668 d:\age-well\parc-new\code\include\rule.h
+	<iostream>
+	<string>
+	<vector>
+	<map>
+	<utility>
+
+1594720600 d:\age-well\parc-new\code\include\probabilitydistribution.h
+	<iostream>
+	<unordered_set>
+	<unordered_map>
+	"planLibrary.h"
+
+1593949194 d:\age-well\parc-new\code\include\bnflite.h
+	<string.h>
+	<string>
+	<list>
+	<vector>
+	<bitset>
+	<algorithm>
+	<typeinfo>
+
+1593949194 source:d:\age-well\parc-new\code\plan_library\planlibrary.cpp
+	"planLibrary.h"
+	"bnflite.h"
+
+1593949194 source:d:\age-well\parc-new\code\plan_library\probabilitydistribution.cpp
+	"probabilityDistribution.h"
+	<random>
+
+1593949194 source:d:\age-well\parc-new\code\plan_library\rule.cpp
+	<vector>
+	<utility>
+	"rule.h"
+	<string>
+
+1593949194 source:d:\age-well\parc-new\code\src\cognitivedistressmanagement.cpp
+	"CognitiveDistressManagement.h"
+
+1594718314 d:\age-well\parc-new\code\include\cognitivedistressmanagement.h
+	"extendedPlanLibrary.h"
+	"solver.h"
+	<vector>
+	<map>
+	<set>
+	<iostream>
+	<algorithm>
+
+1594895572 d:\age-well\parc-new\code\include\solver.h
+	"extendedPlanLibrary.h"
+	"rule.h"
+	<vector>
+	<map>
+	<iostream>
+
+1594895529 source:d:\age-well\parc-new\code\main.cpp
+	<iostream>
+	<iomanip>
+	<fstream>
+	<ctime>
+	"extendedPlanLibrary.h"
+	"solver.h"
+	"CognitiveDistressManagement.h"
+
+1594895609 source:d:\age-well\parc-new\code\src\solver\solver.cpp
+	"solver.h"
+
