@@ -511,23 +511,13 @@ void testPrecSum(int nbGoal, int nbAction, string strPath)
 
 int main()
 {
-    // (bool distress, int nbLib, int nbIt, int nbAction, path)
-    FullTestCdm(true, 1, 1, 10, "True10.txt");
-    // FullTestCdm(true, 100, 10, 100, "True100.txt");
-    // FullTestCdm(false, 100, 10, 10, "False10.txt");
-    // FullTestCdm(false, 100, 10, 100, "False100.txt");
+    // Full test suite
+    FullTestCdm(true, 100, 10, 10, "results_distress.txt");
+    FullTestCdm(false, 100, 10, 10, "results_normal.txt");
 
-    // testPrecSum(5, 10, "PrecSum-5-10.txt");
-    // testPrecSum(10, 10, "PrecSum-10-10.txt");
-    // testPrecSum(20, 10, "PrecSum-20-10.txt");
-    // testPrecSum(5, 45, "PrecSum-5-45.txt");
-    // testPrecSum(5, 100, "PrecSum-5-100.txt");
-
-    // testPrecSupport(5, 10, "PrecSupport-5-10.txt");
-    // testPrecSupport(10, 10, "recSupport-10-10.txt");
-    // testPrecSupport(20, 10, "PrecSupport-20-10.txt");
-    // testPrecSupport(5, 45, "PrecSupport-5-45.txt");
-    // testPrecSupport(5, 100, "PrecSupport-5-100.txt");
+    // Precision optimization
+    testPrecSum(5, 10, "precision_sum_results.txt");
+    testPrecSupport(5, 10, "precision_support_results.txt");
 
     return 0;
 }
