@@ -5,9 +5,9 @@
 
 // ctor & dtor
 
-rule::rule() : id(-1), primitive(-1) {}
+rule::rule() : primitive(-1), id(-1) {}
 
-rule::rule(int _primitive, int _id) : id(_id), primitive(_primitive) {}
+rule::rule(int _primitive, int _id) : primitive(_primitive), id(_id) {}
 
 rule::rule(int _id, string s) : id(_id)
 {
@@ -92,17 +92,17 @@ const string rule::toString()
     resu += to_string(this->primitive);
     resu += "(";
 
-    for (int i = 0; i < this->children.size(); i++)
+    for (int i = 0; i < static_cast<int>(this->children.size()); i++)
     {
         resu += to_string(this->children[i]);
 
-        if (i != this->children.size() - 1)
+        if (i != static_cast<int>(this->children.size()) - 1)
             resu += ",";
     }
 
     resu += "),(";
 
-    for (int j = 0; j < this->constraints.size(); j++)
+    for (int j = 0; j < static_cast<int>(this->constraints.size()); j++)
     {
         resu += "(";
         resu += to_string(this->constraints[j].first);
@@ -110,7 +110,7 @@ const string rule::toString()
         resu += to_string(this->constraints[j].second);
         resu += ")";
 
-        if (j != this->constraints.size() - 1)
+        if (j != static_cast<int>(this->constraints.size()) - 1)
             resu += ",";
     }
 
@@ -125,17 +125,17 @@ const string rule::toString(map<int, string> revIds)
     resu += revIds[this->primitive];
     resu += "(";
 
-    for (int i = 0; i < this->children.size(); i++)
+    for (int i = 0; i < static_cast<int>(this->children.size()); i++)
     {
         resu += revIds[this->children[i]];
 
-        if (i != this->children.size() - 1)
+        if (i != static_cast<int>(this->children.size()) - 1)
             resu += ",";
     }
 
     resu += "),(";
 
-    for (int j = 0; j < this->constraints.size(); j++)
+    for (int j = 0; j < static_cast<int>(this->constraints.size()); j++)
     {
         resu += "(";
         resu += to_string(this->constraints[j].first);
@@ -143,7 +143,7 @@ const string rule::toString(map<int, string> revIds)
         resu += to_string(this->constraints[j].second);
         resu += ")";
 
-        if (j != this->constraints.size() - 1)
+        if (j != static_cast<int>(this->constraints.size()) - 1)
             resu += ",";
     }
 
@@ -173,23 +173,25 @@ ostream &operator<<(ostream &os, const rule &r)
 {
     os << r.primitive << ":";
 
-    for (int i = 0; i < r.children.size(); i++)
+    for (int i = 0; i < static_cast<int>(r.children.size()); i++)
     {
         os << r.children[i];
 
-        if (i != r.children.size() - 1)
+        if (i != static_cast<int>(r.children.size()) - 1)
             os << ",";
     }
 
     os << "|";
 
-    for (int j = 0; j < r.constraints.size(); j++)
+    for (int j = 0; j < static_cast<int>(r.constraints.size()); j++)
     {
         os << "(" << r.constraints[j].first << "," << r.constraints[j].second << ")";
 
-        if (j != r.constraints.size() - 1)
+        if (j != static_cast<int>(r.constraints.size()) - 1)
             os << ",";
     }
 
     os << ";";
+
+    return os;
 }

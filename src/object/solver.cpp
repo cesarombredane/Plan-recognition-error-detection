@@ -36,7 +36,7 @@ int treeNode::update()
 
         for (auto &itC : r.getConstraints())
         {
-            if (itC.second == i)
+            if (itC.second == static_cast<int>(i))
             {
                 if (children.count(itC.first) == 0)
                 {
@@ -59,7 +59,7 @@ int treeNode::update()
             list_candidate.push_back(i);
     }
 
-    int childId = list_candidate[rand() % list_candidate.size()];
+    int childId = list_candidate[rand() % static_cast<int>(list_candidate.size())];
     treeNode *child;
 
     if (children.count(childId) > 0)
@@ -127,11 +127,11 @@ vector<int> tree::update()
 
     if (PO < -1)
     {
-        while (resu.size() + PO < -1)
+        while (static_cast<int>(resu.size()) + PO < -1)
         {
             auto it = epl->ePlanLibrary->getTerminals().begin();
 
-            int rnd = rand() % epl->ePlanLibrary->getTerminals().size();
+            int rnd = rand() % static_cast<int>(epl->ePlanLibrary->getTerminals().size());
             for (int i = 0; i < rnd; i++)
                 it++;
 
@@ -310,10 +310,10 @@ bool solver::addObservation(int obs)
 
     size_t cnt = 0;
 
-    while (validParticles.size() < nbParticles)
+    while (validParticles.size() < static_cast<size_t>(nbParticles))
     {
         cnt++;
-        solverParticle newParticle = particles[obs][rand() % particles[obs].size()];
+        solverParticle newParticle = particles[obs][rand() % static_cast<int>(particles[obs].size())];
         bool ok = newParticle.update();
 
         if (ok && !newParticle.expNextObs.empty())
@@ -322,7 +322,7 @@ bool solver::addObservation(int obs)
             validParticles.push_back(newParticle);
         }
 
-        if (cnt > nbParticles)
+        if (cnt > static_cast<size_t>(nbParticles))
             break;
     }
 
@@ -365,12 +365,12 @@ pair<int, vector<int>> solver::generatePlan()
 
         if (PO < -1)
         {
-            int init = resu.size();
+            int init = static_cast<int>(resu.size());
 
-            while (resu.size() - init + PO - 1 < -1)
+            while (static_cast<int>(resu.size()) - init + PO - 1 < -1)
             {
                 auto it = epl->ePlanLibrary->getTerminals().begin();
-                int rnd = rand() % epl->ePlanLibrary->getTerminals().size();
+                int rnd = rand() % static_cast<int>(epl->ePlanLibrary->getTerminals().size());
 
                 for (int i = 0; i < rnd; i++)
                     it++;

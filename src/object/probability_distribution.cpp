@@ -77,6 +77,8 @@ int probabilityDistribution::RNC(int i) const
     for (auto &it : distribution.at(i))
         if (rand <= (sum += it.second))
             return it.first;
+
+    return -1; // if no element is found, return -1
 }
 
 void probabilityDistribution::setProb(int primitive, int element, float probability)

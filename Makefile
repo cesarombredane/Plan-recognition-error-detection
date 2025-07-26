@@ -9,6 +9,9 @@ INCLUDE_DIR = src/include
 SOURCE_DIR = src/object
 BUILD_DIR = build
 
+# Suppress specific warnings for third-party headers
+SUPPRESS_WARNINGS = -Wno-unused-parameter -Wno-implicit-fallthrough -Wno-free-nonheap-object
+
 # Target executable
 TARGET = parc
 
@@ -31,7 +34,7 @@ $(TARGET): $(OBJECTS)
 
 # Compile source files to object files
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp $(HEADERS)
-	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(SUPPRESS_WARNINGS) -I$(INCLUDE_DIR) -c $< -o $@
 
 # Debug build
 debug: CXXFLAGS += $(DEBUG_FLAGS)

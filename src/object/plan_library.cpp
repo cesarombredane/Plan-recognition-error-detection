@@ -74,7 +74,7 @@ const string planLibrary::toString()
     string resu = "";
 
     resu += "Goals(";
-    int cnt = 0;
+    size_t cnt = 0;
 
     for (auto itG : this->goals)
     {
